@@ -18,16 +18,16 @@ Analyze operational data from NTC Shreevari to uncover inefficiencies and recomm
 - 📊 `Charts/` – Visual diagrams (Fishbone, Lucid)
 - 📈 `Data/` – Raw/cleaned datasets and survey files
 - 🗂 `Miscellaneous/` – Reference material and organizational letters (optional)
+- 🎥 Note: A recorded interview with the Assistant General Manager was conducted as part of this project. Due to file size and confidentiality, it is not included in this repository.
+
 
 ## 🔍 Key Outcomes
 - Identified delays in internal communication
 - Suggested automation in manual tracking processes
 - Visualized problem root causes using Fishbone and Lucid Charts
 
-## 🎥 Note: A recorded interview with the Assistant General Manager was conducted as part of this project. Due to file size and confidentiality, it is not included in this repository.
-
 ## 👩‍💻 Author
 Yogaswetha Sanjaygandhi  
 BS in Data Science – IIT Madras  
 📧 yogaswetha26@gmail.com  
-🔗 [LinkedIn](www.linkedin.com/in/yogaswetha-iitm)
+🔗 [LinkedIn](https://www.linkedin.com/in/yogaswetha-iitm/)
