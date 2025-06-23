@@ -31,3 +31,7 @@ Yogaswetha Sanjaygandhi
 BS in Data Science – IIT Madras  
 📧 yogaswetha26@gmail.com  
 🔗 [LinkedIn](https://www.linkedin.com/in/yogaswetha-iitm/)
+
+
+© 2025 Yogaswetha Sanjaygandhi. This project was created as part of coursework at IIT Madras.  
+Do not copy or submit this work as your own. Use for learning and inspiration only.
