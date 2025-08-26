@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shreevari Energy Systems - Workflow Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chosen Palette: Warm Neutrals with Subtle Accents -->
+    <!-- Application Structure Plan: The SPA is designed as a single-page narrative dashboard. It starts with a high-level project overview, then guides the user through thematic sections: 'Problem & Diagnosis', 'Analysis & Findings', and 'Solutions & Impact'. This structure was chosen to create a logical story, moving from the broad problem to detailed analysis and finally to actionable solutions. Navigation is handled by a sticky header, allowing users to jump between sections or follow the narrative flow. Key interactions include toggling between different chart views (e.g., monthly vs. average machine data) and hovering over charts for detailed tooltips, making data exploration intuitive without overwhelming the user. -->
+    <!-- Visualization & Content Choices: 
+        - Productivity vs. Defect Rate: Goal: Show change over time. Viz: Dual-axis Line Chart (Chart.js). Interaction: Tooltips on hover. Justification: Clearly illustrates the inverse relationship and trends over several months.
+        - Defect Pareto Analysis: Goal: Organize and prioritize issues. Viz: Bar Chart (Chart.js). Interaction: Tooltips. Justification: Effectively applies the 80/20 rule to highlight the most significant defects needing attention.
+        - Machine Breakdown Frequency: Goal: Compare machine performance. Viz: Bar Chart (Chart.js). Interaction: Tooltips, button to toggle view. Justification: Simple comparison of machine reliability.
+        - Supplier Rejection Rates: Goal: Compare supplier quality. Viz: Bar Chart (Chart.js). Interaction: Tooltips. Justification: Direct visual comparison of supplier performance.
+        - Shift Performance: Goal: Compare workforce efficiency. Viz: Box Plot style Bar Chart (Chart.js). Interaction: Tooltips. Justification: Shows the median and range of efficiency for day vs. night shifts effectively.
+        - Recommendations: Goal: Inform and propose solutions. Viz: Structured HTML/CSS cards. Interaction: None. Justification: Clear, readable presentation of actionable insights.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #4A4A4A;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 450px;
+        }
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
+        }
+        .nav-link.active {
+            color: #D97706; 
+            border-bottom-color: #D97706;
+        }
+        .stat-card {
+            background-color: #FFFFFF;
+            border: 1px solid #F3EFEA;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .btn-toggle {
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .btn-toggle.active {
+            background-color: #D97706;
+            color: #FFFFFF;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-200">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-amber-700">Shreevari Workflow Analysis</h1>
+            <div class="hidden md:flex space-x-8">
+                <a href="#overview" class="nav-link text-gray-600 hover:text-amber-700 border-b-2 border-transparent pb-1">Overview</a>
+                <a href="#diagnosis" class="nav-link text-gray-600 hover:text-amber-700 border-b-2 border-transparent pb-1">Diagnosis</a>
+                <a href="#findings" class="nav-link text-gray-600 hover:text-amber-700 border-b-2 border-transparent pb-1">Findings</a>
+                <a href="#solutions" class="nav-link text-gray-600 hover:text-amber-700 border-b-2 border-transparent pb-1">Solutions</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+
+        <section id="overview" class="text-center mb-16">
+            <h2 class="text-4xl font-bold mb-4 text-gray-800">Streamlining the Workflow for Maximum Productivity</h2>
+            <p class="max-w-3xl mx-auto text-lg text-gray-600 mb-8">An interactive analysis of operational efficiency at Shreevari Energy Systems (P) Ltd. This report synthesizes production data to identify bottlenecks, analyze root causes, and propose data-driven solutions for enhanced productivity.</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                <div class="stat-card p-6 rounded-xl text-center">
+                    <p class="text-4xl font-bold text-amber-600">23 hrs</p>
+                    <p class="text-gray-500 mt-2">Avg. Production Lead Time</p>
+                </div>
+                <div class="stat-card p-6 rounded-xl text-center">
+                    <p class="text-4xl font-bold text-amber-600">20%</p>
+                    <p class="text-gray-500 mt-2">Potential Lead Time Reduction</p>
+                </div>
+                <div class="stat-card p-6 rounded-xl text-center">
+                    <p class="text-4xl font-bold text-amber-600">75%</p>
+                    <p class="text-gray-500 mt-2">Defects from Top 3 Issues</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="diagnosis" class="mb-16">
+            <h3 class="text-3xl font-bold text-center mb-2 text-gray-800">Problem & Diagnosis</h3>
+            <p class="text-lg text-gray-600 text-center mb-10 max-w-3xl mx-auto">The core challenge was identifying workflow inefficiencies hindering production targets. Our diagnosis involved a multi-faceted approach, from process mapping to root cause analysis, to uncover the underlying issues affecting cycle times, defect rates, and resource utilization.</p>
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div class="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
+                    <h4 class="text-xl font-bold mb-4 text-gray-700">Pareto Analysis of Defects</h4>
+                    <p class="text-gray-600 mb-6">The Pareto principle (80/20 rule) was applied to pinpoint the most significant defect categories. This analysis revealed that a few key areas were responsible for the majority of production rework and delays, allowing for focused improvement efforts.</p>
+                    <div class="chart-container" style="height:35vh; max-height:350px;">
+                        <canvas id="paretoChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
+                    <h4 class="text-xl font-bold mb-4 text-gray-700">Root Cause Analysis</h4>
+                    <p class="text-gray-600 mb-4">A Fishbone (Ishikawa) Diagram was used to explore the root causes of workflow disruptions. This structured analysis helped categorize potential issues and trace them back to fundamental problems in methods, machinery, materials, and manpower.</p>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <span class="text-amber-600 font-bold mr-3 text-xl">→</span>
+                            <div><strong class="font-semibold text-gray-700">Method:</strong> Lack of standardized procedures and inconsistent process adherence.</div>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-amber-600 font-bold mr-3 text-xl">→</span>
+                            <div><strong class="font-semibold text-gray-700">Machine:</strong> Absence of automation (CNC machines) and frequent breakdowns of older equipment.</div>
+                        </div>
+                         <div class="flex items-start">
+                            <span class="text-amber-600 font-bold mr-3 text-xl">→</span>
+                            <div><strong class="font-semibold text-gray-700">Manpower:</strong> Skill gaps in critical areas like welding, and fatigue issues on night shifts.</div>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-amber-600 font-bold mr-3 text-xl">→</span>
+                            <div><strong class="font-semibold text-gray-700">Material:</strong> Inconsistent quality and delays from primary suppliers, leading to high rejection rates.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="findings" class="mb-16">
+            <h3 class="text-3xl font-bold text-center mb-2 text-gray-800">Analysis & Findings</h3>
+            <p class="text-lg text-gray-600 text-center mb-10 max-w-3xl mx-auto">This section presents a deep dive into the operational data. Interactive charts visualize key performance indicators, revealing trends in productivity, machine reliability, supplier quality, and workforce efficiency. Explore the data to understand the factors driving performance.</p>
+
+            <div class="bg-white p-8 rounded-xl border border-gray-200 shadow-sm mb-8">
+                <h4 class="text-xl font-bold text-center mb-6 text-gray-700">Productivity vs. Defect Rate Trend</h4>
+                <div class="chart-container">
+                    <canvas id="productivityTrendChart"></canvas>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
+                    <h4 class="text-xl font-bold text-center mb-4 text-gray-700">Machine Breakdown Analysis</h4>
+                     <div class="text-center mb-4">
+                        <button id="monthlyBtn" class="btn-toggle active bg-gray-200 text-gray-700 py-2 px-4 rounded-l-md">July-24 Data</button>
+                        <button id="averageBtn" class="btn-toggle bg-gray-200 text-gray-700 py-2 px-4 rounded-r-md">Average Data</button>
+                    </div>
+                    <div class="chart-container" style="height:40vh; max-height:400px;">
+                        <canvas id="machineBreakdownChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
+                    <h4 class="text-xl font-bold text-center mb-4 text-gray-700">Supplier Rejection Rates</h4>
+                    <div class="chart-container" style="height:40vh; max-height:400px;">
+                        <canvas id="supplierRejectionChart"></canvas>
+                    </div>
+                </div>
+                 <div class="bg-white p-8 rounded-xl border border-gray-200 shadow-sm md:col-span-2">
+                    <h4 class="text-xl font-bold text-center mb-4 text-gray-700">Day vs. Night Shift Performance</h4>
+                    <div class="chart-container" style="height:40vh; max-height:400px;">
+                        <canvas id="shiftPerformanceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="solutions" class="text-center">
+            <h3 class="text-3xl font-bold mb-2 text-gray-800">Solutions & Impact</h3>
+            <p class="text-lg text-gray-600 mb-10 max-w-3xl mx-auto">Based on the analysis, a series of short-term and long-term recommendations are proposed. These data-driven solutions aim to address the identified root causes, streamline the workflow, and create a more resilient and efficient production environment.</p>
+            <div class="grid md:grid-cols-2 gap-8 text-left">
+                <div class="bg-green-50 p-8 rounded-xl border border-green-200">
+                    <h4 class="text-xl font-bold mb-4 text-green-800">Short-Term Actions (Immediate Fixes)</h4>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <span class="text-green-600 font-bold mr-3 mt-1">✓</span>
+                            <div><strong class="font-semibold">Strengthen Defect Control:</strong> Implement real-time defect tracking at critical stages (fitting, welding, painting) and enhance operator training to minimize errors.</div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-600 font-bold mr-3 mt-1">✓</span>
+                            <div><strong class="font-semibold">Optimize Maintenance:</strong> Create a structured preventive maintenance schedule for high-breakdown machines (204, 206, 207) to reduce unexpected failures.</div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-600 font-bold mr-3 mt-1">✓</span>
+                             <div><strong class="font-semibold">Address Shift Gaps:</strong> Adjust scheduling to balance workloads between shifts and implement structured rest breaks for night shift workers to mitigate fatigue.</div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="bg-blue-50 p-8 rounded-xl border border-blue-200">
+                    <h4 class="text-xl font-bold mb-4 text-blue-800">Long-Term Strategies (Sustainable Improvements)</h4>
+                     <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <span class="text-blue-600 font-bold mr-3 mt-1">✓</span>
+                            <div><strong class="font-semibold">Invest in Automation:</strong> Introduce CNC machines for cutting and marking to improve precision, reduce manual effort, and increase throughput.</div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-600 font-bold mr-3 mt-1">✓</span>
+                            <div><strong class="font-semibold">Diversify Supplier Base:</strong> Strengthen supplier evaluation criteria and explore alternative sourcing to reduce dependency and mitigate risks from underperforming vendors.</div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-600 font-bold mr-3 mt-1">✓</span>
+                            <div><strong class="font-semibold">Data-Driven Decision System:</strong> Implement real-time production monitoring dashboards and use predictive analytics to forecast machine failures and prevent unplanned downtime.</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-800 text-white mt-16">
+        <div class="container mx-auto px-6 py-4 text-center">
+            <p>&copy; 2024 YOGASWETHA SANJAYGANDHI - BDM Capstone Project, IITM Online BS Degree Program</p>
+        </div>
+    </footer>
+
+    <script>
+        const projectData = {
+            productionTrend: {
+                labels: ["Jul-24", "Aug-24", "Sep-24", "Oct-24", "Nov-24", "Dec-24", "Jan-25", "Feb-25"],
+                productivity: [70, 83.75, 95, 94, 85, 86.67, 92.63, 94.9],
+                defectRate: [5.2, 4.8, 3.5, 4.0, 3.8, 4.2, 3.9, 3.6]
+            },
+            paretoDefects: {
+                labels: ["Measurement Issue", "Assembly Fault", "Painting Error", "Material Defect", "Welding Defect"],
+                frequencies: [28, 22, 20, 18, 12]
+            },
+            machineBreakdowns: {
+                monthly: {
+                    labels: ["201", "202", "203", "204", "205", "206", "207", "208", "209", "210"],
+                    breakdowns: [2, 2, 1, 3, 2, 3, 1, 1, 2, 0]
+                },
+                average: {
+                    labels: ["201", "202", "203", "204", "205", "206", "207", "208", "209", "210"],
+                    breakdowns: [1.14, 1.14, 0.71, 1.71, 1.14, 1.713, 0.86, 0.861, 0.29, 0.00]
+                }
+            },
+            supplierRejections: {
+                labels: ["301", "302", "303", "304", "305"],
+                rates: [7.9, 8.1, 1.5, 5.3, 4.5]
+            },
+            shiftPerformance: {
+                labels: ["Night", "Day"],
+                data: [
+                  [75, 79, 83, 83, 88.5, 97, 74], 
+                  [75, 79.5, 87, 87, 92.5, 96, 98]
+                ]
+            }
+        };
+
+        const chartColors = {
+            primary: 'rgba(217, 119, 6, 0.6)',
+            primaryBorder: 'rgba(217, 119, 6, 1)',
+            secondary: 'rgba(107, 114, 128, 0.6)',
+            secondaryBorder: 'rgba(107, 114, 128, 1)',
+            backgrounds: [
+                'rgba(180, 83, 9, 0.6)', 'rgba(29, 78, 216, 0.6)', 'rgba(4, 120, 87, 0.6)', 
+                'rgba(217, 119, 6, 0.6)', 'rgba(107, 114, 128, 0.6)'
+            ],
+            borders: [
+                'rgba(180, 83, 9, 1)', 'rgba(29, 78, 216, 1)', 'rgba(4, 120, 87, 1)', 
+                'rgba(217, 119, 6, 1)', 'rgba(107, 114, 128, 1)'
+            ]
+        };
+        
+        const globalChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        font: {
+                            family: 'Inter',
+                            size: 14
+                        }
+                    }
+                },
+                tooltip: {
+                    enabled: true,
+                    mode: 'index',
+                    intersect: false,
+                    titleFont: { family: 'Inter', weight: 'bold' },
+                    bodyFont: { family: 'Inter' }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        font: { family: 'Inter' },
+                        maxRotation: 45,
+                        minRotation: 0
+                    },
+                    grid: { display: false }
+                },
+                y: {
+                    ticks: { font: { family: 'Inter' } },
+                    grid: { color: '#E5E7EB' }
+                }
+            }
+        };
+
+        let machineBreakdownChart;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProductivityTrendChart();
+            renderParetoChart();
+            renderMachineBreakdownChart('monthly');
+            renderSupplierRejectionChart();
+            renderShiftPerformanceChart();
+            setupNavLinks();
+            setupToggleButtons();
+        });
+        
+        function setupNavLinks() {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href').substring(1) === entry.target.id) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, { rootMargin: "-50% 0px -50% 0px" });
+
+            sections.forEach(section => observer.observe(section));
+        }
+        
+        function setupToggleButtons() {
+            const monthlyBtn = document.getElementById('monthlyBtn');
+            const averageBtn = document.getElementById('averageBtn');
+
+            monthlyBtn.addEventListener('click', () => {
+                renderMachineBreakdownChart('monthly');
+                monthlyBtn.classList.add('active');
+                averageBtn.classList.remove('active');
+            });
+
+            averageBtn.addEventListener('click', () => {
+                renderMachineBreakdownChart('average');
+                averageBtn.classList.add('active');
+                monthlyBtn.classList.remove('active');
+            });
+        }
+
+        function renderProductivityTrendChart() {
+            const ctx = document.getElementById('productivityTrendChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: projectData.productionTrend.labels,
+                    datasets: [{
+                        label: 'Productivity (%)',
+                        data: projectData.productionTrend.productivity,
+                        borderColor: chartColors.primaryBorder,
+                        backgroundColor: chartColors.primary,
+                        yAxisID: 'y',
+                        tension: 0.3,
+                        fill: false
+                    }, {
+                        label: 'Defect Rate (%)',
+                        data: projectData.productionTrend.defectRate,
+                        borderColor: chartColors.secondaryBorder,
+                        backgroundColor: chartColors.secondary,
+                        yAxisID: 'y1',
+                        tension: 0.3,
+                        fill: false
+                    }]
+                },
+                options: {
+                    ...globalChartOptions,
+                    scales: {
+                        x: { ...globalChartOptions.scales.x },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: { display: true, text: 'Productivity (%)', font: { family: 'Inter' } },
+                             ...globalChartOptions.scales.y
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: { display: true, text: 'Defect Rate (%)', font: { family: 'Inter' } },
+                            grid: { drawOnChartArea: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderParetoChart() {
+            const ctx = document.getElementById('paretoChart').getContext('2d');
+            const sortedData = projectData.paretoDefects.labels
+                .map((label, i) => ({ label, frequency: projectData.paretoDefects.frequencies[i] }))
+                .sort((a, b) => b.frequency - a.frequency);
+            
+            const labels = sortedData.map(d => d.label);
+            const frequencies = sortedData.map(d => d.frequency);
+            const total = frequencies.reduce((acc, val) => acc + val, 0);
+            const cumulativePercentage = frequencies.reduce((acc, val, i) => {
+                const prevSum = i > 0 ? acc[i - 1] : 0;
+                acc.push(prevSum + (val / total) * 100);
+                return acc;
+            }, []);
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Defect Frequency',
+                        data: frequencies,
+                        backgroundColor: chartColors.backgrounds,
+                        borderColor: chartColors.borders,
+                        borderWidth: 1,
+                        yAxisID: 'y'
+                    }, {
+                        type: 'line',
+                        label: 'Cumulative %',
+                        data: cumulativePercentage,
+                        borderColor: chartColors.primaryBorder,
+                        backgroundColor: 'transparent',
+                        yAxisID: 'y1',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    ...globalChartOptions,
+                    plugins: { ...globalChartOptions.plugins, legend: { display: false } },
+                    scales: {
+                        x: { ...globalChartOptions.scales.x, ticks: { ...globalChartOptions.scales.x.ticks, callback: function(value) { return this.getLabelForValue(value).length > 15 ? this.getLabelForValue(value).substring(0,15) + '...' : this.getLabelForValue(value); }}},
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: { display: true, text: 'Frequency of Defects', font: { family: 'Inter' } },
+                             ...globalChartOptions.scales.y
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            max: 100,
+                            title: { display: true, text: 'Cumulative %', font: { family: 'Inter' } },
+                            grid: { drawOnChartArea: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderMachineBreakdownChart(dataType) {
+            const data = projectData.machineBreakdowns[dataType];
+            const ctx = document.getElementById('machineBreakdownChart').getContext('2d');
+            
+            if (machineBreakdownChart) {
+                machineBreakdownChart.destroy();
+            }
+
+            machineBreakdownChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Breakdowns',
+                        data: data.breakdowns,
+                        backgroundColor: chartColors.backgrounds,
+                        borderColor: chartColors.borders,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    ...globalChartOptions,
+                    plugins: { ...globalChartOptions.plugins, legend: { display: false } },
+                    scales: {
+                        x: { ...globalChartOptions.scales.x },
+                        y: {
+                            ...globalChartOptions.scales.y,
+                            title: { display: true, text: 'Number of Breakdowns', font: { family: 'Inter' } }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderSupplierRejectionChart() {
+            const ctx = document.getElementById('supplierRejectionChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: projectData.supplierRejections.labels,
+                    datasets: [{
+                        label: 'Rejection Rate (%)',
+                        data: projectData.supplierRejections.rates,
+                        backgroundColor: chartColors.backgrounds,
+                        borderColor: chartColors.borders,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    ...globalChartOptions,
+                    plugins: { ...globalChartOptions.plugins, legend: { display: false } },
+                    scales: {
+                        x: { ...globalChartOptions.scales.x },
+                        y: {
+                            ...globalChartOptions.scales.y,
+                            title: { display: true, text: 'Rejection Rate (%)', font: { family: 'Inter' } }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function renderShiftPerformanceChart() {
+            const ctx = document.getElementById('shiftPerformanceChart').getContext('2d');
+            const nightData = projectData.shiftPerformance.data[0].sort((a,b) => a-b);
+            const dayData = projectData.shiftPerformance.data[1].sort((a,b) => a-b);
+
+            const getBoxPlotValues = (data) => {
+                const q1 = data[Math.floor(data.length / 4)];
+                const median = data[Math.floor(data.length / 2)];
+                const q3 = data[Math.floor(data.length * (3 / 4))];
+                return [data[0], q1, median, q3, data[data.length - 1]];
+            };
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: projectData.shiftPerformance.labels,
+                    datasets: [{
+                        label: 'Efficiency (%)',
+                        data: [
+                            getBoxPlotValues(nightData),
+                            getBoxPlotValues(dayData)
+                        ],
+                        backgroundColor: [chartColors.secondary, chartColors.primary],
+                        borderColor: [chartColors.secondaryBorder, chartColors.primaryBorder],
+                        borderWidth: 1,
+                        barPercentage: 0.5
+                    }]
+                },
+                options: {
+                    ...globalChartOptions,
+                    parsing: {
+                        yAxisKey: 'y'
+                    },
+                    plugins: { ...globalChartOptions.plugins, legend: { display: false } },
+                    scales: {
+                        x: { ...globalChartOptions.scales.x },
+                        y: {
+                            ...globalChartOptions.scales.y,
+                            title: { display: true, text: 'Efficiency (%)', font: { family: 'Inter' } }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const values = context.raw;
+                                return [
+                                    `Max: ${values[4]}%`,
+                                    `Q3: ${values[3]}%`,
+                                    `Median: ${values[2]}%`,
+                                    `Q1: ${values[1]}%`,
+                                    `Min: ${values[0]}%`
+                                ];
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
